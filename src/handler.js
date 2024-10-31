@@ -75,21 +75,28 @@ const editNoteByIdHandler = (request, h) => {
   const { title, tags, body } = request.payload;
   const updatedAt = new Date().toISOString();
 
-  const isSuccess = notes.filter((note) => note.id === id).length > 0;
+  const index = notes.findIndex((note) => note.id === id);
 
   if (index !== -1) {
-    notes.splice(index, 1);
+    notes[index] = {
+      ...notes[index],
+      title,
+      tags,
+      body,
+      updatedAt,
+    };
+
     const response = h.response({
-      status: `success`,
-      message: `Catatan berhasil dihapus`,
+      status: "success",
+      message: "Catatan berhasil diperbarui",
     });
     response.code(200);
     return response;
   }
 
   const response = h.response({
-    status: `fail`,
-    message: `Catatan gagal dihapus. Id tidak ditemukan`,
+    status: "fail",
+    message: "Gagal memperbarui catatan. Id tidak ditemukan",
   });
   response.code(404);
   return response;
